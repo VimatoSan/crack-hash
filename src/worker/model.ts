@@ -1,5 +1,6 @@
 import Observable from "../observable";
 import { Worker } from "worker_threads";
+import {config} from "../config";
 
 export type WorkerRequest = {
   id: number;
@@ -16,14 +17,12 @@ export type CrackResult = {
   partNumber: number;
 }
 
-const PATH = "./dist/worker/resolve-hash.js";
-
 export default class WorkModel extends Observable {
   private worker: Worker | null = null;
 
 
   async startCrack(request: WorkerRequest) {
-      this.worker = new Worker(PATH, {
+      this.worker = new Worker(config.worker.scriptPath, {
         workerData: request
       });
 

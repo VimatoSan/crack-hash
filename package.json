@@ -5,13 +5,7 @@
   "main": "index.ts",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
-    "worker1": "tsc && set PORT=3001 && set MANAGER_URL=http://localhost:3000 && node dist/worker/main.js",
-    "worker2": "tsc && set PORT=3002 && set MANAGER_URL=http://localhost:3000 && node dist/worker/main.js",
-    "worker3": "tsc && set PORT=3003 && set MANAGER_URL=http://localhost:3000 && node dist/worker/main.js",
-    "workers": "concurrently \"npm run worker1\" \"npm run worker2\" \"npm run worker3\"",
-    "manager": "tsc && set WORKER_URLS=http://localhost:3001,http://localhost:3002,http://localhost:3003 && node dist/manager/main.js",
-    "dev": "concurrently \"npm run workers\" \"npm run manager\""
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

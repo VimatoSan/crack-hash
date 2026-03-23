@@ -1,10 +1,14 @@
 import {randomUUID} from "crypto";
 import {Queue} from "queue-typed";
 import Observable from "../observable";
+import {config} from "../config";
 
-type TaskStatus = 'READY' | 'IN_PROGRESS' | 'PARTIALLY_COMPLETED' |'ERROR';
-
-const TIMEOUT_MS = 10_000;
+enum TaskStatus {
+  Ready = 'READY',
+  InProgress = 'IN_PROGRESS',
+  PartiallyCompleted = 'PARTIALLY_COMPLETED',
+  Error = 'ERROR',
+}
 
 export type Task = {
   request: CrackRequest;
@@ -15,7 +19,7 @@ export type Task = {
 }
 
 export enum NotifyEvents {
-  Start= 'START',
+  Start = 'START',
   Terminate = 'TERMINATE'
 }
 
@@ -29,8 +33,6 @@ export type RequestPayload = {
   hash: string;
   maxLength: number;
 }
-
-const MAX_CACHE_SIZE = 100;
 
 export default class TasksModel extends Observable {
   private workerCount: number;
@@ -63,8 +65,8 @@ export default class TasksModel extends Observable {
       }
     }
 
-    if (task.workerStatuses.every((elem) => elem) && task.status === 'IN_PROGRESS') {
-      task.status = 'READY';
+    if (task.workerStatuses.every((elem) => elem) && task.status === TaskStatus.InProgress) {
+      task.status = TaskStatus.Ready;
       clearTimeout(task.timer!);
       this.skipTask();
     }
@@ -78,7 +80,7 @@ export default class TasksModel extends Observable {
     const requestId = randomUUID();
     this.tasks[requestId] = {
       request,
-      status: 'IN_PROGRESS',
+      status: TaskStatus.InProgress,
       data: null,
       timer: null,
       workerStatuses: new Array(this.workerCount).fill(false)
@@ -106,7 +108,7 @@ export default class TasksModel extends Observable {
   }
 
   private addToCache(taskId: string) {
-    if (this.cachedTasks.length > MAX_CACHE_SIZE) {
+    if (this.cachedTasks.length > config.manager.maxCacheSize) {
       this.cachedTasks.shift();
     }
     this.cachedTasks.push(taskId);
@@ -122,10 +124,10 @@ export default class TasksModel extends Observable {
         id: oldTaskId,
       })
       if (oldTask.data != null && oldTask.data.length > 0) {
-        oldTask.status = 'PARTIALLY_COMPLETED'
+        oldTask.status = TaskStatus.PartiallyCompleted
       }
       else {
-        oldTask.status = 'ERROR';
+        oldTask.status = TaskStatus.Error;
       }
     }
 
@@ -142,7 +144,7 @@ export default class TasksModel extends Observable {
 
   private startTask(payload: RequestPayload) {
     const task = this.tasks[payload.id]!;
-    task.timer = setTimeout(this.skipTask, TIMEOUT_MS);
+    task.timer = setTimeout(this.skipTask, config.manager.timeout);
     this.notify<RequestPayload>(NotifyEvents.Start, {
       hash: payload.hash,
       maxLength: payload.maxLength,

@@ -5,9 +5,6 @@ services:
       context: .
       target: runner
     container_name: crack-hack-manager
-    environment:
-      - PORT=3000
-      - WORKER_URLS=http://worker1:3000,http://worker2:3000,http://worker3:3000
     ports:
       - "3000:3000"
     depends_on:
@@ -22,9 +19,6 @@ services:
       context: .
       target: runner
     container_name: crack-hack-worker1
-    environment:
-      - PORT=3000
-      - MANAGER_URL=http://manager:3000
 
     command: [ "dist/worker/main.js" ]
 
@@ -33,11 +27,8 @@ services:
     build:
       context: .
       target: runner
-    image: crack-hack:worker2
     container_name: crack-hack-worker2
-    environment:
-      - PORT=3000
-      - MANAGER_URL=http://manager:3000
+
     command: [ "dist/worker/main.js" ]
 
 
@@ -46,7 +37,5 @@ services:
       context: .
       target: runner
     container_name: crack-hack-worker3
-    environment:
-      - PORT=3000
-      - MANAGER_URL=http://manager:3000
+
     command: ["dist/worker/main.js"]

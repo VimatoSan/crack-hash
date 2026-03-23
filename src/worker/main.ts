@@ -1,10 +1,8 @@
 import WorkModel from "./model";
 import Service from "../worker/service";
-
-const managerUrl = process.env.MANAGER_URL;
-if (!managerUrl ) throw new Error('MANAGER_URL not set');
+import {config} from "../config";
 
 
 const model = new WorkModel();
-const service = new Service(model, managerUrl.trim());
+const service = new Service(model, config.worker.managerUrl);
 service.init();

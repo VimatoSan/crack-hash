@@ -1,9 +1,8 @@
 import TasksModel from "./tasks-model";
 import Service from "./service";
+import {config} from "../config";
 
-const urls = process.env.WORKER_URLS;
-if (!urls) throw new Error('WORKER_URLS not set');
-const workerUrls = urls.split(',').map(url => url.trim());
+const workerUrls = config.manager.workerUrls;
 
 const model = new TasksModel(workerUrls.length);
 const service = new Service(model, workerUrls);
