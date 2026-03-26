@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  manager:
+    build:
+      context: .
+      target: runner
+    container_name: crack-hack-manager
+    ports:
+      - "3000:3000"
+    depends_on:
+      - worker1
+      - worker2
+      - worker3
+    command: [ "dist/manager/main.js" ]
+
+
+  worker1:
+    build:
+      context: .
+      target: runner
+    container_name: crack-hack-worker1
+
+    command: [ "dist/worker/main.js" ]
+
+
+  worker2:
+    build:
+      context: .
+      target: runner
+    container_name: crack-hack-worker2
+
+    command: [ "dist/worker/main.js" ]
+
+
+  worker3:
+    build:
+      context: .
+      target: runner
+    container_name: crack-hack-worker3
+
+    command: ["dist/worker/main.js"]

@@ -1,0 +1,27 @@
+{
+  "name": "crack-hack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.6",
+    "express": "^5.2.1",
+    "fast-xml-parser": "^5.4.1",
+    "md5": "^2.3.0",
+    "queue-typed": "^2.4.3",
+    "xmlbuilder2": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "concurrently": "^9.2.1",
+    "tslint": "^6.1.3",
+    "typescript": "^5.9.3"
+  }
+}
